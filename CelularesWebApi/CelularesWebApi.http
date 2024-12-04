@@ -1,0 +1,6 @@
+@CelularesWebApi_HostAddress = http://localhost:5178
+
+GET {{CelularesWebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

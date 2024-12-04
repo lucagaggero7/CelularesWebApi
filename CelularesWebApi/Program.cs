@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.MapGet("/", () => Results.Redirect("/weatherforecast"));
+app.MapGet("/", () => Results.Redirect("/api/celulares"));
 
 app.UseHttpsRedirection();
 

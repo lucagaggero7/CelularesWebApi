@@ -6,16 +6,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var origenesPermitidos = builder.Configuration.GetValue<string>("OrigenesPermitidos")!.Split(',');
+var origenesPermitidos = builder.Configuration.GetValue<string>("OrigenesPermitidos")!
+                          .Split(',')
+                          .Select(x => x.Trim())
+                          .ToArray();
 
 builder.Services.AddCors(opciones =>
 {
-    opciones.AddDefaultPolicy(politica =>
+    opciones.AddPolicy("CorsPolicy", politica =>
     {
-        politica.WithOrigins(origenesPermitidos).AllowAnyHeader().AllowAnyMethod();
+        politica.WithOrigins(origenesPermitidos)
+                .AllowAnyHeader()
+                .AllowAnyMethod();
     });
 });
 
@@ -23,7 +27,6 @@ builder.Services.AddDbContext<Context>(opciones => opciones.UseSqlServer("name=D
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -33,7 +36,7 @@ app.MapGet("/", () => Results.Redirect("/api/celulares"));
 
 app.UseHttpsRedirection();
 
-app.UseCors();
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 
